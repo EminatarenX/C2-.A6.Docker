@@ -1,0 +1,16 @@
+# Dockerfile para el frontend
+FROM node:18 AS builder
+ARG VITE_API_URL
+WORKDIR /app
+COPY . .
+ENV VITE_API_URL=$VITE_API_URL
+RUN npm install && npm run build
+
+# Etapa de producción con Nginx
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Expone el puerto 80
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

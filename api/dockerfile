@@ -1,0 +1,19 @@
+FROM node:18
+ARG SERVER_PORT
+ARG DATABASE_URL
+
+WORKDIR /usr/src/app
+
+COPY package*.json .
+
+RUN npm install
+
+COPY . .
+
+ENV PORT=$SERVER_PORT
+ENV DATABASE_URL=$DATABASE_URL
+COPY wait-for-it.sh /wait-for-it.sh
+
+EXPOSE $SERVER_PORT
+
+CMD [ "npm", "start"]
